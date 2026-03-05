@@ -1,0 +1,111 @@
+hospitals:
+
+  - id: stanford-hospital
+    name: Stanford Hospital
+    system: Stanford Health Care
+    city: Stanford
+    state: CA
+    country: US
+    lat: 37.4340
+    lng: -122.1750
+    cms_id: 050443
+    file_url: https://stanfordhealthcare.org/content/dam/SHC/patientsandvisitors/pricingtransparency/946174066_stanford-health-care_standardcharges.json
+    file_format: json
+
+  - id: stanford-tri-valley
+    name: Stanford Health Care Tri-Valley
+    system: Stanford Health Care
+    city: Pleasanton
+    state: CA
+    country: US
+    lat: 37.6624
+    lng: -121.8747
+    cms_id: 050767
+    file_url: https://stanfordhealthcare.org/content/dam/valleycare/patients-visitors/941429628_stanford-health-care---tri-valley_standardcharges.json
+    file_format: json
+
+  - id: cpmc-davies
+    name: CPMC Davies Campus
+    system: Sutter Health
+    city: San Francisco
+    state: CA
+    country: US
+    lat: 37.7692
+    lng: -122.4335
+    cms_id: 050047
+    file_url: https://www.sutterhealth.org/-/media/Project/SutterHealth/SutterHealth/files/billing-insurance/costs-and-charges/940562680-1659439834_california-pacific-medical-center-davies-campus_standardcharges.csv
+    file_format: csv
+
+  - id: cpmc-mission-bernal
+    name: CPMC Mission Bernal Campus
+    system: Sutter Health
+    city: San Francisco
+    state: CA
+    country: US
+    lat: 37.7490
+    lng: -122.4150
+    cms_id: 050047
+    file_url: https://www.sutterhealth.org/-/media/Project/SutterHealth/SutterHealth/files/billing-insurance/costs-and-charges/940562680-1730238007_california-pacific-medical-center-mission-bernal-campus_standardcharges.csv
+    file_format: csv
+
+  - id: cpmc-van-ness
+    name: CPMC Van Ness Campus
+    system: Sutter Health
+    city: San Francisco
+    state: CA
+    country: US
+    lat: 37.7869
+    lng: -122.4232
+    cms_id: 050047
+    file_url: https://www.sutterhealth.org/-/media/Project/SutterHealth/SutterHealth/files/billing-insurance/costs-and-charges/940562680-1740348929_california-pacific-medical-center-van-ness-campus_standardcharges.csv
+    file_format: csv
+
+  - id: alta-bates-summit
+    name: Alta Bates Summit Medical Center (Summit Campus)
+    system: Sutter Health
+    city: Oakland
+    state: CA
+    country: US
+    lat: 37.8292
+    lng: -122.2408
+    cms_id: 050276
+    file_url: https://www.sutterhealth.org/-/media/Project/SutterHealth/SutterHealth/files/billing-insurance/costs-and-charges/940562680-1295181477_alta-bates-summit-medical-center-summit-campus_standardcharges.csv
+    file_format: csv
+
+  - id: mills-peninsula
+    name: Mills-Peninsula Medical Center
+    system: Sutter Health
+    city: Burlingame
+    state: CA
+    country: US
+    lat: 37.5812
+    lng: -122.3648
+    cms_id: 050007
+    file_url: https://www.sutterhealth.org/-/media/Project/SutterHealth/SutterHealth/files/billing-insurance/costs-and-charges/940562680-1043670334_mills-peninsula-medical-center_standardcharges.csv
+    file_format: csv
+
+  - id: ucsf-medical-center
+    name: UCSF Medical Center
+    system: UCSF Health
+    city: San Francisco
+    state: CA
+    country: US
+    lat: 37.7631
+    lng: -122.4576
+    cms_id: 050454
+    file_url: TBD
+    file_format: json
+    notes: Discover from ucsfhealth.org/about/pricing-transparency
+
+  - id: kaiser-sf
+    name: Kaiser Permanente San Francisco Medical Center
+    system: Kaiser Permanente
+    city: San Francisco
+    state: CA
+    country: US
+    lat: 37.7780
+    lng: -122.4423
+    cms_id: 050076
+    file_url: TBD
+    file_format: unknown
+    notes: Needs URL discovery
