@@ -1,0 +1,8 @@
+# Raw hospital price files (large, downloaded locally)
+raw/
+# SQLite database
+db/*.db
+# Python cache
+__pycache__/
+*.pyc
+.env
