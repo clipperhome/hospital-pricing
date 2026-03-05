@@ -133,7 +133,7 @@ def download_hospital(hospital, conn):
 
     if existing:
         print(f"  → No change detected (same hash), skipping ingestion")
-        os.remove(out_path)  # Don't keep duplicate
+        # Keep the file — don't delete it
         return
 
     # Register new price file version
