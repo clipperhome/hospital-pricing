@@ -79,5 +79,54 @@ Total                            $1,840         $2,100
 
 ---
 
+## What We Learned From Building the Bundle Agent (2026-03-05)
+
+### Data Quality Issues — Chargemaster Files Are Not Clean
+
+**1. Duplicate rows per CPT**
+Stanford lists CPT `99283` 5+ times (same code, different settings: "both/inpatient/outpatient" and per payer plan). Summing without careful deduplication inflates prices wildly.
+
+**2. Professional + Facility fees per CPT**
+Same CPT code (e.g. `99283`) appears twice per hospital:
+- `billing_class = professional` → physician fee (~$153 cash at Stanford)
+- `billing_class = facility` → hospital/building fee (~$1,995 cash at Stanford)
+Both must be summed for a real estimate. Originally we were only getting the professional fee, making Stanford look artificially cheap ($193 total vs realistic ~$4,800+).
+
+**3. Hospital-specific code quirks**
+Stanford does not use CPT `5023` for ER facility fees — they file it under `99283 billing_class=facility`. Code must not assume standard CPT mappings hold across hospitals.
+
+**4. Keyword search is dangerous**
+Searching "emergency" matched surgical screws (C1713 "SCREW NEURO EMERGENCY") as ER fees. Rule: use exact CPT match when available; keywords are last resort only.
+
+**5. Sutter hospitals have no fixed negotiated rates**
+CPMC, Alta Bates, Mills-Peninsula use algorithm-based pricing. Their MRFs do not contain fixed dollar amounts for payer-negotiated rates → "—" in all payer columns. This is by design, not a data gap.
+
+**6. Chargemaster prices ≠ what people actually pay**
+The MRF "cash price" is the self-pay discounted rate. The "gross charge" is the inflated list price. Neither matches what insured patients pay — for that you need actual claims data.
+
+### Fundamental Methodology Problem
+
+Summing individual CPT line items to get a visit total is **unreliable** because:
+- Line items don't add linearly (hospitals bundle services internally)
+- We don't know which items a specific patient actually received
+- Prices vary by day, physician, payer contract vintage
+
+### What the Data IS Good For
+
+- **Relative comparison**: Hospital A is 2x more expensive than Hospital B for a given procedure
+- **Single-procedure lookup**: CPT 27447 (knee replacement) at Stanford vs CPMC
+- **Cash price baseline**: Useful for uninsured/self-pay patients negotiating
+- **Payer transparency**: What different insurers pay for the same code (where available)
+
+### Recommended Direction
+
+Rather than computing a precise total (which the data can't reliably support), show:
+- **Price ranges** with clear "typical visit" context sourced from DESIGN.md benchmarks
+- **Per-item comparisons** — let users see individual line items across hospitals
+- **Heavy caveats**: "This is an estimate based on published chargemaster rates. Your actual bill will vary."
+- Long-term: supplement with CMS claims data (actual paid amounts) for more accurate totals
+
+---
+
 ## Architecture Docs
 Full architecture: `workspace/projects/hospital-pricing/ARCHITECTURE.md`
