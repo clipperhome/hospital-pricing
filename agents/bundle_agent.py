@@ -120,22 +120,30 @@ def lookup_item(conn, item: dict, hospital_ids: list) -> dict:
         ORDER BY p.hospital_id, p.price_type
     """, args).fetchall()
 
+    # Group by hospital + billing_class so we can sum professional + facility
+    # Structure: results[hid][billing_class] = {cash, gross, payers}
+    by_class = {}
+
     for r in rows:
         hid = r[0]
-        if hid not in results:
-            results[hid] = {
-                "hospital_name": r[1],
-                "cash": None,
-                "gross": None,
-                "payers": {}
-            }
-        h = results[hid]
+        hospital_name = r[1]
         price_type = r[2]
         cash_price = r[3]
         gross = r[4]
         min_p = r[5]
         payer = r[6]
-        billing_class = r[7]
+        billing_class = r[7] or "unknown"
+
+        key = (hid, billing_class)
+        if key not in by_class:
+            by_class[key] = {
+                "hospital_name": hospital_name,
+                "billing_class": billing_class,
+                "cash": None,
+                "gross": None,
+                "payers": {}
+            }
+        h = by_class[key]
 
         if price_type == "cash" and cash_price and cash_price > 5:
             if h["cash"] is None or cash_price < h["cash"]:
@@ -151,6 +159,39 @@ def lookup_item(conn, item: dict, hospital_ids: list) -> dict:
             if label and price and price > 5:
                 if label not in h["payers"] or price < h["payers"][label]:
                     h["payers"][label] = price
+
+    # Now sum professional + facility per hospital
+    for (hid, billing_class), data in by_class.items():
+        if hid not in results:
+            results[hid] = {
+                "hospital_name": data["hospital_name"],
+                "cash": 0,
+                "gross": 0,
+                "payers": {},
+                "breakdown": []  # professional + facility components
+            }
+        h = results[hid]
+
+        component_cash = data["cash"] or data["gross"] or 0
+        component_gross = data["gross"] or 0
+
+        h["cash"] = (h["cash"] or 0) + component_cash
+        h["gross"] = (h["gross"] or 0) + component_gross
+        h["breakdown"].append({
+            "billing_class": billing_class,
+            "cash": data["cash"],
+            "gross": data["gross"]
+        })
+
+        for payer, price in data["payers"].items():
+            if payer not in h["payers"]:
+                h["payers"][payer] = 0
+            h["payers"][payer] += price
+
+    # Zero out hospitals with no real data
+    for hid in list(results.keys()):
+        if not results[hid]["cash"] and not results[hid]["gross"]:
+            del results[hid]
 
     return results
 
